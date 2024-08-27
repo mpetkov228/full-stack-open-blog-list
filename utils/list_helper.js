@@ -46,11 +46,33 @@ const mostBlogs = (blogs) => {
     }
   });
 
-  const sortedAuthors = Object.entries(authors).sort((a, b) => b[1] - a[1]);
+  const sortedByBlogs = Object.entries(authors).sort((a, b) => b[1] - a[1]);
 
   return {
-    author: sortedAuthors[0][0],
-    blogs: sortedAuthors[0][1]
+    author: sortedByBlogs[0][0],
+    blogs: sortedByBlogs[0][1]
+  };
+};
+
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return;
+  }
+
+  const authors = {};
+  blogs.forEach(blog => {
+    if (!authors[blog.author]) {
+      authors[blog.author] = blog.likes;
+    } else {
+      authors[blog.author] += blog.likes;
+    }
+  });
+
+  const sortedByLikes = Object.entries(authors).sort((a, b) => b[1] - a[1]);
+
+  return {
+    author: sortedByLikes[0][0],
+    likes: sortedByLikes[0][1]
   };
 };
 
@@ -58,5 +80,6 @@ module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 };
