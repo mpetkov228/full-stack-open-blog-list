@@ -26,13 +26,18 @@ const initialBlogs = [
 beforeEach(async () => {
   await Blog.deleteMany({});
 
-  for (const blog in initialBlogs) {
+  for (const blog of initialBlogs) {
     let blogObject = new Blog(blog);
     await blogObject.save();
   }
 });
 
-
+test('returns blogs as JSON', async () => {
+  await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+});
 
 after(async () => {
   await mongoose.connection.close();
