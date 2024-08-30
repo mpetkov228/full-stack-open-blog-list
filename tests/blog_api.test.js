@@ -82,6 +82,19 @@ test('when likes property missing, defaults to 0', async () => {
   assert.strictEqual(savedNote.body.likes, 0);
 });
 
+test('when title property missing', async () => {
+  const newBlog = {
+    author: 'Bob Gray',
+    url: 'https://tester.com',
+    likes: 1
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400);  
+});
+
 after(async () => {
   await mongoose.connection.close();
 });

@@ -9,6 +9,15 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
+const errorHandler = (error, request, response, next) => {
+  if (error.name === 'ValidationError') {
+    response.status(400).json({ error: 'required property missing' });
+  }
+
+  next(error);
+};
+
 module.exports = {
-  requestLogger
+  requestLogger,
+  errorHandler
 };
