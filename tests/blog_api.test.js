@@ -95,6 +95,19 @@ test('when title property missing', async () => {
     .expect(400);  
 });
 
+test('when url property missing', async () => {
+  const newBlog = {
+    title: 'Integration testing',
+    author: 'Bob Gray',
+    likes: 1
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
