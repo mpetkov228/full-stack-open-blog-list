@@ -8,25 +8,10 @@ const Blog = require('../models/blog');
 
 const api = supertest(app);
 
-const initialBlogs = [
-  {
-    title: 'Elden Ring Review',
-    author: 'John Eldenring',
-    url: 'https://gamereviews.com',
-    likes: 44
-  },
-  {
-    title: 'JS and You',
-    author: 'Jane Smith',
-    url: 'https://programmeinjs.com',
-    likes: 13
-  }
-];
-
 beforeEach(async () => {
   await Blog.deleteMany({});
 
-  for (const blog of initialBlogs) {
+  for (const blog of helper.initialBlogs) {
     let blogObject = new Blog(blog);
     await blogObject.save();
   }
@@ -62,7 +47,7 @@ test('a valid blog can be added', async () => {
   const response = await api.get('/api/blogs');
   const titles = response.body.map(blog => blog.title);
 
-  assert.strictEqual(response.body.length, initialBlogs.length + 1);
+  assert.strictEqual(response.body.length, helper.initialBlogs.length + 1);
   assert(titles.includes('Integration testing'));
 });
 
@@ -117,7 +102,7 @@ test('deleting blog with valid id', async () => {
     .expect(204);
   
   const blogsAtEnd = await api.get('/api/blogs');
-  assert.strictEqual(blogsAtEnd.body.length, initialBlogs.length - 1);
+  assert.strictEqual(blogsAtEnd.body.length, helper.initialBlogs.length - 1);
 
   const titles = blogsAtEnd.body.map(blog => blog.title);
   assert(!titles.includes(blogToDelete.title));

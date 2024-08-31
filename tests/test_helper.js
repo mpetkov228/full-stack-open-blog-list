@@ -29,5 +29,6 @@ const nonExistingId = async () => {
 }
 
 module.exports = {
+  initialBlogs,
   nonExistingId
 };
