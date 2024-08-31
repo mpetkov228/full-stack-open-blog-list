@@ -93,7 +93,29 @@ test('when url property missing', async () => {
     .expect(400);
 });
 
-test('deleting blog with valid id', async () => {
+test('update blog with valid id', async () => {
+  const blogsAtStart = await api.get('/api/blogs');
+  const blogToUpdate = blogsAtStart.body[0];
+
+  const newBlog = {
+    title: blogToUpdate.title,
+    author: blogToUpdate.author,
+    url: blogToUpdate.url,
+    likes: 1
+  };
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(newBlog)
+    .expect(200);
+  
+  const blogsAtEnd = await api.get('/api/blogs');
+  const updatedBlog = blogsAtEnd.body[0];
+
+  assert.notStrictEqual(blogToUpdate.likes, updatedBlog.likes);
+});
+
+test('delete blog with valid id', async () => {
   const blogsAtStart = await api.get('/api/blogs');
   const blogToDelete = blogsAtStart.body[0];
 
