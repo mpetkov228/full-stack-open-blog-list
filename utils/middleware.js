@@ -12,12 +12,19 @@ const requestLogger = (request, response, next) => {
 const errorHandler = (error, request, response, next) => {
   if (error.name === 'ValidationError') {
     response.status(400).json({ error: 'required property missing' });
+  } else if (error.name === 'CastError') {
+    response.status(400).send({ error: 'malformatted id' });
   }
 
   next(error);
 };
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' });
+};
+
 module.exports = {
   requestLogger,
-  errorHandler
+  errorHandler,
+  unknownEndpoint
 };

@@ -3,7 +3,7 @@ const assert = require('node:assert');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
-
+const helper = require('./test_helper');
 const Blog = require('../models/blog');
 
 const api = supertest(app);
@@ -106,6 +106,21 @@ test('when url property missing', async () => {
     .post('/api/blogs')
     .send(newBlog)
     .expect(400);
+});
+
+test('deleting blog with valid id', async () => {
+  const blogsAtStart = await api.get('/api/blogs');
+  const blogToDelete = blogsAtStart.body[0];
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204);
+  
+  const blogsAtEnd = await api.get('/api/blogs');
+  assert.strictEqual(blogsAtEnd.body.length, initialBlogs.length - 1);
+
+  const titles = blogsAtEnd.body.map(blog => blog.title);
+  assert(!titles.includes(blogToDelete.title));
 });
 
 after(async () => {
