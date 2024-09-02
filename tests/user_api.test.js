@@ -22,8 +22,6 @@ test('returns users as JSON', async () => {
 });
 
 test('succeeds with valid data', async () => {
-  const passwordHash = await bcrypt.hash('testpass', 10);
-
   const newUser = {
     username: 'testuser',
     name: 'test',
@@ -41,6 +39,36 @@ test('succeeds with valid data', async () => {
 
   assert.strictEqual(usersAtEnd.body.length, helper.initialUsers.length + 1);
   assert(usernames.includes(newUser.username));
+});
+
+test('fails with invalid data', async () => {
+  const newUser = {
+    username: 'me',
+    name: 'test',
+    password: 'password'
+  };
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+  
+  const usersAtEnd = await api.get('/api/users');
+  assert.strictEqual(usersAtEnd.body.length, helper.initialUsers.length);
+});
+
+test('fails with duplicate username', async () => {
+  const duplicateUser = helper.initialUsers[0];
+
+  await api
+    .post('/api/users')
+    .send(duplicateUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
+
+  const usersAtEnd = await api.get('/api/users');
+  assert.strictEqual(usersAtEnd.body.length, helper.initialUsers.length);
 });
 
 after(async () => {
