@@ -43,7 +43,7 @@ test('a valid blog can be added', async () => {
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/);
-  
+
   const response = await api.get('/api/blogs');
   const titles = response.body.map(blog => blog.title);
 
@@ -63,7 +63,7 @@ test('when likes property missing, defaults to 0', async () => {
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/);
-  
+
   assert.strictEqual(savedNote.body.likes, 0);
 });
 
@@ -77,7 +77,7 @@ test('when title property missing', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .expect(400);  
+    .expect(400);
 });
 
 test('when url property missing', async () => {
@@ -108,7 +108,7 @@ test('update blog with valid id', async () => {
     .put(`/api/blogs/${blogToUpdate.id}`)
     .send(newBlog)
     .expect(200);
-  
+
   const blogsAtEnd = await api.get('/api/blogs');
   const updatedBlog = blogsAtEnd.body[0];
 
@@ -122,7 +122,7 @@ test('delete blog with valid id', async () => {
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
     .expect(204);
-  
+
   const blogsAtEnd = await api.get('/api/blogs');
   assert.strictEqual(blogsAtEnd.body.length, helper.initialBlogs.length - 1);
 

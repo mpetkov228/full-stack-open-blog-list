@@ -2,7 +2,6 @@ const { test, beforeEach, after } = require('node:test');
 const assert = require('node:assert');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
-const bcrypt = require('bcrypt');
 const app = require('../app');
 const helper = require('./test_helper');
 const User = require('../models/user');
@@ -25,7 +24,7 @@ test('succeeds with valid data', async () => {
   const newUser = {
     username: 'testuser',
     name: 'test',
-    password: 'testuser' 
+    password: 'testuser'
   };
 
   await api
@@ -53,7 +52,7 @@ test('fails with invalid data', async () => {
     .send(newUser)
     .expect(400)
     .expect('Content-Type', /application\/json/);
-  
+
   const usersAtEnd = await api.get('/api/users');
   assert.strictEqual(usersAtEnd.body.length, helper.initialUsers.length);
 });

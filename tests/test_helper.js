@@ -39,7 +39,7 @@ const nonExistingId = async () => {
   await blog.deleteOne();
 
   return blog._id.toString();
-}
+};
 
 module.exports = {
   initialBlogs,
